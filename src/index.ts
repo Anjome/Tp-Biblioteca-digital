@@ -1,5 +1,6 @@
 import express from "express"
-import { connect } from "mongoose"
+import { connect, version } from "mongoose"
+import { Schema, model } from "mongoose"
 
 process.loadEnvFile()
 
@@ -16,6 +17,19 @@ const connectDb = async () => {
         console.log("🛑Error al conectar a MongoDB")
     }
 }
+
+const bookSchema = new Schema({
+    title: { type: String, requerid: true, unique: true },
+    author: { type: String, unique: true },
+    publishedYear: { type: Number },
+    genre: { type: String },
+    available: { type: Boolean, default: true },
+}, {
+    versionKey: false
+})
+
+const Book = model("Book", bookSchema)
+
 
 app.listen(PORT, () => {
     console.log(`✅Servidor HTTP en funcionamiento en puerto ${PORT},`)
