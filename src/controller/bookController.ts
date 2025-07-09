@@ -1,6 +1,7 @@
 
 import { Request, Response } from "express";
-import { Book } from "../models/bookModel"
+import { Book } from "../models/bookModel";
+import { IBook } from "../interfaces/book.interface";
 
 
 const getAllBooks = async (req: Request, res: Response): Promise<any> => {
@@ -45,9 +46,12 @@ const getBookById = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
-const addNewBook = async (req: Request, res: Response): Promise<any> => {
+const addNewBook = async (
+    req: Request<{}, {}, IBook>,
+    res: Response
+): Promise<any> => {
     try {
-        const body = req.body
+        const body: IBook = req.body;
         const newBook = new Book(body)
         await newBook.save()
 
