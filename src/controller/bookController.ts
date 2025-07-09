@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import { Book } from "../models/bookModel";
 import { IBook } from "../interfaces/book.interface";
+import { handleError } from "../utils/handleError";
 
 
 const getAllBooks = async (req: Request, res: Response): Promise<any> => {
@@ -14,11 +15,7 @@ const getAllBooks = async (req: Request, res: Response): Promise<any> => {
 
         })
     } catch (error) {
-        const err = error as Error
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
+        handleError(res, error, "Error al obtener los libros");
     }
 }
 
@@ -30,26 +27,20 @@ const getBookById = async (req: Request, res: Response): Promise<any> => {
             return res.status(404).json({
                 success: false,
                 message: "Libro no encontrado",
-                data: book
+                data: null,
             })
             res.json({
                 success: true,
-                message: "Libro obtenido"
+                message: "Libro obtenido",
+                data: book,
             })
         }
     } catch (error) {
-        const err = error as Error
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
+        handleError(res, error, "Error al obtener el libro");
     }
 }
 
-const addNewBook = async (
-    req: Request<{}, {}, IBook>,
-    res: Response
-): Promise<any> => {
+const addNewBook = async (req: Request<{}, {}, IBook>, res: Response): Promise<any> => {
     try {
         const body: IBook = req.body;
         const newBook = new Book(body)
@@ -62,11 +53,7 @@ const addNewBook = async (
 
         })
     } catch (error) {
-        const err = error as Error
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
+        handleError(res, error, "Error al crear el libro");
     }
 }
 
@@ -93,11 +80,7 @@ const updateBook = async (req: Request, res: Response): Promise<any> => {
             data: updateBook
         });
     } catch (error) {
-        const err = error as Error
-        res.status(400).json({
-            success: false,
-            message: err.message
-        });
+        handleError(res, error, "Error al actualizar el libro");
     }
 }
 
@@ -118,11 +101,7 @@ const deleteBook = async (req: Request, res: Response): Promise<any> => {
             data: deleteBook,
         })
     } catch (error) {
-        const err = error as Error
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
+        handleError(res, error, "Error al eliminar el libro");
     }
 }
 
